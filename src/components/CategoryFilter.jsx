@@ -8,6 +8,28 @@ export default function CategoryFilter({ activeFilter, onFilterChange }) {
           - The active button should look different from the others
             (e.g., "btn-primary" for active, "btn-outline" otherwise).
           - Don't forget the `key` prop! */}
+
+          {FILTERS.map(f=> (
+            <button 
+            key = {f}
+            onClick = {() => onFilterChange(f)}
+            classname={filter === f ? "btn-primary" : "btn-outline"} 
+            > 
+            {f}
+            </button>
+          ))};
+
+          {FILTERS.map(f=> (
+            <button 
+            key = {f}
+            onClick = {() => onFilterChange(f)}
+            classname={activeFilter === f ? "btn-primary" : "btn-outline"} 
+            > 
+            {f}
+            </button>
+          ))}
+
+
     </div>
   );
 }
