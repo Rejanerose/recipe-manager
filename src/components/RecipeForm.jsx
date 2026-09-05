@@ -4,9 +4,9 @@ const CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Dessert"];
 
 export default function RecipeForm({ onAdd }) {
   // TODO: create controlled state for title, category, and time.
-  const [title, setTitle] = useState;
-  const [category, setCategory] = useState;
-  const [time, setTime] = useState;
+  const [title, setTitle] = useState ("");
+  const [category, setCategory] = useState("");
+  const [time, setTime] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();

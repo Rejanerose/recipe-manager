@@ -52,7 +52,7 @@ useEffect(() =>
 
   const handleAdd = (recipe) => {
     setRecipes([
-      ...recipe, 
+      ...recipes, 
       {
         ...recipe,
         id: Date.now(),
@@ -123,13 +123,8 @@ const visibleRecipes =
          onDelete={handleDelete} 
          />
 
-        <div className="alert alert-info">
-          <span>
-            Delete this alert once you have wired up your components. Then run{" "}
-            <code className="font-mono">npm run dev</code> and check the browser.
-          </span>
+       
         </div>
       </div>
-    </div>
   );
 }
