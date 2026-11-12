@@ -28,10 +28,10 @@ export function useSavedRecipes() {
 
   // TODO 8 — Save a catalogue result.
   // Same shape as `remove` above: mutationFn, then invalidate on success.
-  const create = useMutation({ mutationFn: createRecipe });
+  const create = useMutation({ mutationFn: createRecipe, onSuccess: invalidate });
 
   // TODO 11 — Save an edit (time + notes). Same shape again.
-  const update = useMutation({ mutationFn: updateRecipe });
+  const update = useMutation({ mutationFn: updateRecipe, onSuccess: invalidate });
 
   // TODO 12 — The favourite toggle, OPTIMISTICALLY.
   //
@@ -59,7 +59,23 @@ export function useSavedRecipes() {
   // To prove the rollback works, see "How to prove your rollback works" in the
   // handout. Do NOT just stop json-server — the list unmounts and you will see
   // nothing.
-  const favorite = useMutation({ mutationFn: updateRecipe, onSettled: invalidate });
+  const favorite = useMutation({
+    mutationFn: updateRecipe,
+    onMutate: async ({ id, favorite: nextFavorite }) => {
+      await queryClient.cancelQueries({ queryKey: KEY });
+      const previous = queryClient.getQueryData<SavedRecipe[]>(KEY);
+      queryClient.setQueryData<SavedRecipe[]>(KEY, (old = []) =>
+        old.map((recipe) => recipe.id === id
+          ? { ...recipe, favorite: nextFavorite ?? !recipe.favorite }
+          : recipe),
+      );
+      return { previous };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previous) queryClient.setQueryData(KEY, context.previous);
+    },
+    onSettled: invalidate,
+  });
 
   const saved = query.data ?? [];
 

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import type { SavedRecipe, RecipePatch } from "@/features/recipes/recipes.types";
 
 interface EditRecipeFormProps {
@@ -15,6 +15,21 @@ export default function EditRecipeForm({
   onCancel,
   isSaving,
 }: EditRecipeFormProps) {
+  const [time, setTime] = useState(String(recipe.time ?? 0));
+  const [notes, setNotes] = useState(recipe.notes ?? "");
+  const original = useRef({ time: recipe.time ?? 0, notes: recipe.notes ?? "" });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const parsedTime = Number(time);
+    if (!Number.isFinite(parsedTime) || parsedTime < 0) return;
+    const trimmedNotes = notes.trim();
+    if (parsedTime === original.current.time && trimmedNotes === original.current.notes) {
+      onCancel();
+      return;
+    }
+    onSave({ id: recipe.id, time: parsedTime, notes: trimmedNotes });
+  };
   // TODO 10 — Controlled inputs, seeded from the recipe being edited.
   //
   // Two pieces of state, each initialised from `recipe` (Week 11):
@@ -45,17 +60,17 @@ export default function EditRecipeForm({
   // would be pure waste. That is the distinction the final exam asks about.
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-3">
       <h3 className="font-bold text-lg">{recipe.title}</h3>
 
       <label className="form-control">
         <span className="label-text">Prep time (minutes)</span>
-        <input type="number" min="0" className="input input-bordered" />
+        <input type="number" min="0" value={time} onChange={(event) => setTime(event.target.value)} className="input input-bordered" />
       </label>
 
       <label className="form-control">
         <span className="label-text">Notes</span>
-        <textarea className="textarea textarea-bordered" rows={3} />
+        <textarea value={notes} onChange={(event) => setNotes(event.target.value)} className="textarea textarea-bordered" rows={3} />
       </label>
 
       <div className="modal-action">

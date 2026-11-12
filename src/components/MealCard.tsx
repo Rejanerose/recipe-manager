@@ -34,7 +34,13 @@ export default function MealCard({ meal, onSave, isSaved, isSaving }: MealCardPr
             Without the isSaved guard a student can save the same meal six
             times, and the rubric checks for exactly that. */}
         <div className="card-actions justify-end mt-2">
-          <button className="btn btn-sm btn-primary">Save</button>
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={() => onSave(meal)}
+            disabled={isSaved || isSaving}
+          >
+            {isSaved ? "Saved" : isSaving ? "Saving..." : "Save"}
+          </button>
         </div>
       </div>
     </div>

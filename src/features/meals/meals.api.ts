@@ -27,7 +27,19 @@ import type { Meal, Recipe, SearchResponse, CategoriesResponse } from "./meals.t
 // Do NOT give this an `id`. `id` belongs to json-server and is assigned on POST,
 // which is exactly why Recipe has no id and SavedRecipe does.
 export function toRecipe(meal: Meal): Recipe {
-  // TODO: return our shape
+  const ingredients = Array.from({ length: 20 }, (_, index) => meal[`strIngredient${index + 1}`])
+    .filter((ingredient): ingredient is string => Boolean(ingredient?.trim()));
+
+  return {
+    mealId: meal.idMeal,
+    title: meal.strMeal,
+    category: meal.strCategory,
+    thumb: meal.strMealThumb,
+    ingredients,
+    time: 0,
+    notes: "",
+    favorite: false,
+  };
 }
 
 // TODO 2 — Search the catalogue.
@@ -47,7 +59,8 @@ export function toRecipe(meal: Meal): Recipe {
 // Verify with curl before you write any React:
 //   curl "https://www.themealdb.com/api/json/v1/1/search.php?s=zzzznotathing"
 export async function searchMeals(query: string): Promise<Recipe[]> {
-  // TODO: typed GET, normalise null -> [], map through toRecipe
+  const response = await mealdb.get<SearchResponse>("/search.php", { params: { s: query } });
+  return (response.data.meals ?? []).map(toRecipe);
 }
 
 // TODO 3 — The real category list.
@@ -58,5 +71,6 @@ export async function searchMeals(query: string): Promise<Recipe[]> {
 // categories and they are not your five. Return string[] so CategoryFilter can
 // keep rendering buttons without knowing where they came from.
 export async function getCategories(): Promise<string[]> {
-  // TODO: typed GET, normalise null -> [], return string[]
+  const response = await mealdb.get<CategoriesResponse>("/categories.php");
+  return (response.data.categories ?? []).map(({ strCategory }) => strCategory);
 }

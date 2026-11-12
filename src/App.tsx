@@ -34,7 +34,7 @@ export default function App() {
   //
   // Filter `saved` by the active category here in render. Do not add a
   // useState for the filtered list and do not add a useEffect to sync it.
-  const visible = saved;
+  const visible = filter === "All" ? saved : saved.filter((recipe) => recipe.category === filter);
 
   return (
     <div className="min-h-screen bg-base-200 py-8 px-4">
@@ -45,13 +45,6 @@ export default function App() {
             Search TheMealDB · save what you like · add your own notes
           </p>
         </header>
-
-        <div className="alert alert-info">
-          <span>
-            Starter template. The saved list and Delete already work — everything
-            else is a TODO. Delete this alert before you submit.
-          </span>
-        </div>
 
         <SearchBar onSearch={setTerm} />
 
