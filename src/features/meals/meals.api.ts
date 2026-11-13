@@ -48,3 +48,16 @@ export async function getCategories(): Promise<string[]> {
     ({ strCategory }) => strCategory
   );
 }
+
+export async function getMealById(
+  mealId: string
+): Promise<Recipe | null> {
+  const response = await mealdb.get<SearchResponse>(
+    "/lookup.php",
+    { params: { i: mealId } }
+  );
+
+  const meal = response.data.meals?.[0];
+
+  return meal ? toRecipe(meal) : null;
+}
