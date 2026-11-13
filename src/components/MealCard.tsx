@@ -1,3 +1,5 @@
+
+import { Link } from "react-router-dom";
 import type { Recipe } from "@/features/meals/meals.types";
 
 interface MealCardProps {
@@ -7,18 +9,36 @@ interface MealCardProps {
   isSaving: boolean;
 }
 
-// A single CATALOGUE result from TheMealDB. Not saved yet, so it has no id —
-// only a mealId. That is why the prop is `Recipe` and not `SavedRecipe`.
-export default function MealCard({ meal, onSave, isSaved, isSaving }: MealCardProps) {
-  const { title, category, thumb, ingredients } = meal;
+export default function MealCard({
+  meal,
+  onSave,
+  isSaved,
+  isSaving,
+}: MealCardProps) {
+  const { title, category, thumb, ingredients, mealId } = meal;
 
   return (
     <div className="card bg-base-100 shadow">
-      <figure className="h-40 overflow-hidden">
-        <img src={thumb} alt={title} className="w-full object-cover" />
-      </figure>
+      <Link to={`/recipe/${mealId}`} aria-label={`View ${title} recipe`}>
+        <figure className="h-40 overflow-hidden">
+          <img
+            src={thumb}
+            alt={title}
+            className="w-full h-full object-cover hover:scale-105 transition-transform"
+          />
+        </figure>
+      </Link>
+
       <div className="card-body">
-        <h2 className="card-title text-base">{title}</h2>
+        <h2 className="card-title text-base">
+          <Link
+            to={`/recipe/${mealId}`}
+            className="link link-hover"
+          >
+            {title}
+          </Link>
+        </h2>
+
         <div className="flex gap-2">
           <span className="badge badge-primary">{category}</span>
           <span className="badge badge-ghost whitespace-nowrap">
@@ -26,13 +46,6 @@ export default function MealCard({ meal, onSave, isSaved, isSaving }: MealCardPr
           </span>
         </div>
 
-        {/* TODO 9 — The Save button.
-            Three states, and all three matter:
-              - already saved  -> disabled, label "Saved"
-              - save in flight -> disabled, label "Saving..."
-              - otherwise      -> enabled, label "Save", calls onSave(meal)
-            Without the isSaved guard a student can save the same meal six
-            times, and the rubric checks for exactly that. */}
         <div className="card-actions justify-end mt-2">
           <button
             className="btn btn-sm btn-primary"
