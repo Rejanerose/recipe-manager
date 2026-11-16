@@ -1,0 +1,27 @@
+{
+  "recipes": [
+    {
+      "mealId": "53536",
+      "title": "Black Beans Hotpot",
+      "category": "Vegetarian",
+      "thumb": "https://www.themealdb.com/images/media/meals/81ahfr1784394567.jpg",
+      "ingredients": [
+        "Black Beans",
+        "Onion",
+        "Green Pepper",
+        "Red Pepper",
+        "Celery",
+        "Garlic",
+        "Ground Cumin",
+        "Oregano",
+        "Salt",
+        "Black Pepper",
+        "Water"
+      ],
+      "time": 11,
+      "notes": "dscsc",
+      "favorite": false,
+      "id": "864bf107-2e73-405c-89ba-f536e2a75563"
+    }
+  ]
+}
